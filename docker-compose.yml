@@ -1,0 +1,32 @@
+version: "3.8"
+
+services:
+  # Base de Datos (Aislada en backend_network)
+  db:
+    image: mysql:8.2
+    container_name: secureshop-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "3306:3306"
+    networks:
+      - backend_network
+    volumes:
+      - db_data:/var/lib/mysql
+
+  # Los servicios API, Frontend y Simuladores se agregarán aquí en sus respectivas fases
+
+networks:
+  public_network:
+    driver: bridge # Trust Boundary: Acceso desde el cliente al Frontend
+  backend_network:
+    driver: bridge # Trust Boundary: Acceso de la API a la DB
+  simulators_network:
+    driver: bridge # Trust Boundary: Acceso de la API a servicios externos
+
+volumes:
+  db_data:

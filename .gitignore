@@ -1,0 +1,21 @@
+# Node
+node_modules/
+dist/
+build/
+
+# .NET
+bin/
+obj/
+appsettings.json
+appsettings.Development.json
+*.user
+
+# Entorno y OS
+.env
+.DS_Store
+Thumbs.db
+
+# IDEs
+.idea/
+.vscode/
+*.swp
