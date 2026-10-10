@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="SecureShop.Api/SecureShop.Api.csproj" />
+  <Project Path="SecureShop.Application/SecureShop.Application.csproj" />
+  <Project Path="SecureShop.Domain/SecureShop.Domain.csproj" />
+  <Project Path="SecureShop.Infrastructure/SecureShop.Infrastructure.csproj" />
+</Solution>
