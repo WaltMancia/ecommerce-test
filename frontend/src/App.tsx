@@ -1,45 +1,53 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider } from './context/AuthContext';
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
 
-// Componentes "Placeholder" para probar el enrutamiento y autenticación
-const Login = () => <div className="p-8"><h1 className="text-2xl font-bold">Login Page</h1></div>;
-const Catalog = () => <div className="p-8"><h1 className="text-2xl font-bold">Catálogo Público</h1></div>;
-const Cart = () => <div className="p-8"><h1 className="text-2xl font-bold">Mi Carrito (Protegido)</h1></div>;
-const AdminDashboard = () => <div className="p-8"><h1 className="text-2xl font-bold text-red-600">Panel de Administración</h1></div>;
-const Unauthorized = () => <div className="p-8"><h1 className="text-2xl font-bold text-red-500">Acceso Denegado</h1></div>;
+import { Login } from './pages/Login';
+import { Catalog } from './pages/Catalog';
+import { AdminDashboard } from './pages/AdminDashboard';
+
+const Navbar = () => {
+  const { user, logout, isAuthenticated } = useAuth();
+
+  return (
+    <nav className="bg-gray-800 text-white p-4 flex justify-between items-center shadow-md">
+      <div className="flex gap-6 items-center">
+        <Link to="/" className="text-xl font-bold tracking-wider">SECURE<span className="text-blue-400">SHOP</span></Link>
+        <Link to="/" className="hover:text-gray-300 transition">Catálogo</Link>
+        { user?.role === 'Admin' && (
+          <Link to="/admin" className="text-red-400 hover:text-red-300 font-medium">Panel Admin</Link>
+        ) }
+      </div>
+      <div className="flex gap-4 items-center">
+        { isAuthenticated ? (
+          <>
+            <span className="text-sm text-gray-400">{ user?.email }</span>
+            <button onClick={ logout } className="bg-gray-700 px-3 py-1 rounded hover:bg-gray-600 text-sm">Salir</button>
+          </>
+        ) : (
+          <Link to="/login" className="bg-blue-600 px-4 py-1 rounded hover:bg-blue-700 transition">Iniciar Sesión</Link>
+        ) }
+      </div>
+    </nav>
+  );
+};
 
 function App () {
   return (
     <AuthProvider>
       <BrowserRouter>
-        <div className="min-h-screen flex flex-col">
-          {/* Navegación básica */ }
-          <nav className="bg-gray-800 text-white p-4 flex gap-4">
-            <a href="/">Catálogo</a>
-            <a href="/login">Login</a>
-            <a href="/cart">Carrito</a>
-            <a href="/admin">Admin</a>
-          </nav>
-
+        <div className="min-h-screen flex flex-col bg-gray-50 text-gray-800 font-sans">
+          <Navbar />
           <main className="flex-grow">
             <Routes>
-              {/* Rutas Públicas */ }
+              {/* Públicas */ }
               <Route path="/" element={ <Catalog /> } />
               <Route path="/login" element={ <Login /> } />
-              <Route path="/unauthorized" element={ <Unauthorized /> } />
 
-              {/* Rutas Protegidas (Customer o Admin) */ }
-              <Route element={ <ProtectedRoute /> }>
-                <Route path="/cart" element={ <Cart /> } />
-              </Route>
-
-              {/* Rutas Protegidas (Solo Admin) */ }
+              {/* Protegidas */ }
               <Route element={ <ProtectedRoute allowedRoles={ ['Admin'] } /> }>
                 <Route path="/admin" element={ <AdminDashboard /> } />
               </Route>
-
-              <Route path="*" element={ <Navigate to="/" replace /> } />
             </Routes>
           </main>
         </div>
