@@ -7,6 +7,7 @@ using SecureShop.Application.Services;
 using SecureShop.Infrastructure.Data;
 using SecureShop.Infrastructure.Services;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // 1. Configuración de la base de datos MySQL
@@ -27,6 +28,12 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // 2. Inyección de dependencias
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ICartService, CartService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
+
+builder.Services.AddHttpClient<SecureShop.Infrastructure.Services.PaymentGatewayClient>();
+builder.Services.AddHttpClient<SecureShop.Infrastructure.Services.NotificationClient>();
+
+builder.Services.AddScoped<IOrderService, SecureShop.Infrastructure.Services.OrderService>();
 
 // 3. Validación de la configuración JWT
 var jwtSettings = builder.Configuration.GetSection("Jwt");

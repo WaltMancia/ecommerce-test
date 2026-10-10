@@ -18,6 +18,30 @@ services:
     volumes:
       - db_data:/var/lib/mysql
 
+  payment-simulator:
+    image: node:20-alpine
+    container_name: secureshop-payment-sim
+    working_dir: /app
+    volumes:
+      - ./simulators/payment-gateway:/app
+    command: sh -c "npm install && node server.js"
+    ports:
+      - "4001:4001"
+    networks:
+      - simulators_network
+
+  notification-simulator:
+    image: node:20-alpine
+    container_name: secureshop-notification-sim
+    working_dir: /app
+    volumes:
+      - ./simulators/notification-service:/app
+    command: sh -c "npm install && node server.js"
+    ports:
+      - "4002:4002"
+    networks:
+      - simulators_network
+
   # Los servicios API, Frontend y Simuladores se agregarán aquí en sus respectivas fases
 
 networks:

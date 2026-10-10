@@ -12,6 +12,8 @@ public class AppDbContext : DbContext
     public DbSet<Product> Products { get; set; }
     public DbSet<Cart> Carts { get; set; }
     public DbSet<CartItem> CartItems { get; set; }
+    public DbSet<Order> Orders { get; set; }
+    public DbSet<OrderItem> OrderItems { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -26,5 +28,9 @@ public class AppDbContext : DbContext
 
         // Configuración de Cart (Un usuario solo puede tener un carrito activo)
         modelBuilder.Entity<Cart>().HasIndex(c => c.UserId).IsUnique();
+
+        // precisión del total
+        modelBuilder.Entity<Order>().Property(o => o.TotalAmount).HasPrecision(18, 2);
+        modelBuilder.Entity<OrderItem>().Property(oi => oi.UnitPrice).HasPrecision(18, 2);
     }
 }
