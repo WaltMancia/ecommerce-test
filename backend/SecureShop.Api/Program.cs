@@ -26,6 +26,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 // 2. Inyección de dependencias
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ICartService, CartService>();
 
 // 3. Validación de la configuración JWT
 var jwtSettings = builder.Configuration.GetSection("Jwt");
